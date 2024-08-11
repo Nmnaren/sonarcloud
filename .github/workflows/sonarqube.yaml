@@ -1,15 +1,14 @@
-name: SonarQube Analysis
+name: SonarCloud Analysis
 
 on:
   workflow_dispatch:
 
-
 jobs:
-  sonarQube:
+  build:
+    name: Build and analyze
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up JDK 11
@@ -17,23 +16,10 @@ jobs:
         with:
           java-version: '11'
 
-      - name: Install SonarScanner CLI
-        run: |
-          curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
-          unzip sonar-scanner-cli.zip -d $HOME
-          export PATH="$HOME/sonar-scanner-4.7.0.2747-linux/bin:$PATH"
-          
-      - name: Run SonarQube Analysis
-        run: |
-          sonar-scanner \
-          -Dsonar.projectKey=your_project_key \
-          -Dsonar.sources=src \
-          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-
-      - name: Upload sonar reports
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v3
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v1.10
         with:
-          name: sonar-reports
-          path: $HOME/.sonar/cache/
+          projectBaseDir: .  # Adjust if your code is not in the root
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Required for PR comments
