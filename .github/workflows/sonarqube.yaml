@@ -37,8 +37,8 @@ jobs:
           projectBaseDir: .
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_ORG: "nmnaren"
-          SONAR_PROJECT_KEY: "Nmnaren_sonarcloud"
+          SONAR_ORG: nmnaren
+          SONAR_PROJECT_KEY: Nmnaren_sonarcloud
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload SonarCloud reports
